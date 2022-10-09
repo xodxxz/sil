@@ -38,18 +38,20 @@ getgenv().Aiming = {
     Enabled = true,
 
     ShowFOV = false,
-    FOV = 15.5,
-    FOVSides = 25,
-    FOVColour = Color3fromRGB(255, 255, 255),
+    FOV = 11.55,
+    FOVSides = 300,
+    FOVColour = Color3fromRGB(98, 37, 209),
 
     VisibleCheck = true,
     
-    HitChance = 100,
+    HitChance = 110,
+
+    Resolver = false,
 
     Selected = nil,
     SelectedPart = nil,
 
-    TargetPart = {"Head", "UpperTorso", "LowerTorso", "HumanoidRootPart", "RightFoot", "LeftFoot"},
+    TargetPart = {"Head", "HumanoidRootPart", "LowerTorso"},
 
     Ignored = {
         Teams = {
@@ -68,8 +70,8 @@ local Aiming = getgenv().Aiming
 
 -- // Create circle
 local circle = Drawingnew("Circle")
-circle.Transparency = 0.4
-circle.Thickness = 0.8
+circle.Transparency = 1
+circle.Thickness = 2
 circle.Color = Aiming.FOVColour
 circle.Filled = false
 Aiming.FOVCircle = circle
@@ -434,7 +436,21 @@ Heartbeat:Connect(function()
     Aiming.GetClosestPlayerToCursor()
 end)
 
--- //
-return Aiming
+if getgenv().Aiming.Resolver == true then
+  local RunService = game:GetService("RunService")
 
--- // If you want the examples, look at the docs.
+RunService.Heartbeat:Connect(function()
+    pcall(function()
+        for i,v in pairs(game.Players:GetChildren()) do
+            if v.Name ~= game.Players.LocalPlayer.Name then
+                local hrp = v.Character.HumanoidRootPart
+                hrp.Velocity = Vector3.new(hrp.Velocity.X, 0, hrp.Velocity.Z)    
+                hrp.AssemblyLinearVelocity = Vector3.new(hrp.Velocity.X, 0, hrp.Velocity.Z)   
+            end
+        end
+    end)
+end)
+            end
+
+-- //
+return Aimingd
